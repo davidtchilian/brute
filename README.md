@@ -29,7 +29,7 @@ pip3 install -r requirements.txt
 Pour l'utiliser, il suffit de lancer le script avec python3 et de lui passer en paramètre le mot de passe à tester.
 
 ```bash
-python3 brute_hash.py 48a10d9b69ab6d80b814443d266ca190
+python3 brute.py 48a10d9b69ab6d80b814443d266ca190
 ```
 
 ![Output](output.png)
