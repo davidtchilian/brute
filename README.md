@@ -4,6 +4,16 @@ Brute est un petit script python qui permet de repérer le type de mot de passe 
 
 Il n'est pas très avancé, il va simplement essayer de repérer le type de mot de passe avec une expression régulière, et si un match est fait, tous les mots de passes contenus dans les fichiers qui sont dans le repertoire `wordlists` seront essayés.
 
+## Chiffrements supportés
+
+- MD5
+- SHA1
+- SHA256
+- SHA512
+- SHA2
+- BCRYPT
+
+
 ## Installation
 
 Pour l'installer, il suffit de cloner le dépôt git et d'installer les dépendances.
