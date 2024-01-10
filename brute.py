@@ -47,7 +47,7 @@ def get_wordlists():
 
 
 if len(sys.argv) != 2:
-    print("Usage: python3 main.py <hash>")
+    print(f"Usage: {sys.argv[0]} <hash>")
     sys.exit(1)
 
 hash_to_crack = sys.argv[1]
