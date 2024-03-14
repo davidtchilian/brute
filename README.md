@@ -2,7 +2,7 @@
 
 Brute est un petit script python qui permet de repérer le type de mot de passe et d'essayer de le cracker.
 
-Il n'est pas très avancé, il va simplement essayer de repérer le type de mot de passe avec une expression régulière, et si un match est fait, tous les mots de passes contenus dans les fichiers qui sont dans le repertoire `wordlists` seront essayés.
+Il va simplement essayer de repérer le type de mot de passe avec une expression régulière, et si un match est trouvé, tous les mots de passes contenus dans les fichiers qui sont dans le repertoire `wordlists` seront essayés.
 
 ## Chiffrements supportés
 
@@ -25,7 +25,6 @@ pip3 install -r requirements.txt
 
 ## Utilisation
 
-<!-- Pour l'utiliser, il suffit de lancer le script avec python3 et de lui passer en paramètre le mot de passe à tester. -->
 Il existe plusieurs utilisations possibles : 
 
 ### Hash en ligne de commande
@@ -44,14 +43,19 @@ Il est possible de donner plusieurs hash par fichier, chaque hash doit être sur
 python3 brute.py -f hash.txt
 ```
 
-
-
-### Avec mot de passe en ligne de commande
+### Hash unique en ligne de commande
 
 ```bash
+python3 brute.py -H password
+```
 
+### hash.txt
 
-![Output](output.png)
+Si vous ne donnez ni de hash en ligne de commande, ni de fichier, le script va chercher un fichier `hash.txt` dans le dossier courant.
+
+```bash
+python3 brute.py -H password
+```
 
 ## Ajouter des wordlists
 

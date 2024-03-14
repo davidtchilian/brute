@@ -31,9 +31,6 @@ def sha_256(string):
 def md5(string):
     return hashlib.md5(string.encode()).hexdigest()
 
-def md4(string):
-    return hashlib.new('md4', string.encode()).hexdigest()
-
 def get_wordlists():
     wordlists_to_return = []
     w = [os.path.join("wordlists", f) for f in os.listdir("wordlists")]
