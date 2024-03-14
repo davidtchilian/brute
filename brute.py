@@ -48,8 +48,7 @@ def crack_hash(hash_to_crack):
         r"^[A-Fa-f0-9]{32}$": md5,
         r"^[A-Fa-f0-9]{40}$": sha_1,
         r"^[A-Fa-f0-9]{64}$": sha_256,
-        r"^[A-Fa-f0-9]{128}$": sha_512,
-        r"^[A-Fa-f0-9]{32}:[A-Fa-f0-9]{32}$": md4
+        r"^[A-Fa-f0-9]{128}$": sha_512
     }
 
     detected_hashing_algorithms = []
