@@ -54,7 +54,7 @@ python3 brute.py -H password
 Si vous ne donnez ni de hash en ligne de commande, ni de fichier, le script va chercher un fichier `hash.txt` dans le dossier courant.
 
 ```bash
-python3 brute.py -H password
+python3 brute.py
 ```
 
 ## Ajouter des wordlists
