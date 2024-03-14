@@ -30,7 +30,7 @@ Il existe plusieurs utilisations possibles :
 ### Hash en ligne de commande
 
 ```bash
-python3 brute.py 48a10d9b69ab6d80b814443d266ca190
+python3 brute.py -H 48a10d9b69ab6d80b814443d266ca190
 ```
 
 Attention, si le hash contient des caractères spéciaux, vous devez les escape avec un backslash ou mettre le hash dans un fichier.
@@ -41,12 +41,6 @@ Il est possible de donner plusieurs hash par fichier, chaque hash doit être sur
 
 ```bash
 python3 brute.py -f hash.txt
-```
-
-### Hash unique en ligne de commande
-
-```bash
-python3 brute.py -H password
 ```
 
 ### hash.txt
