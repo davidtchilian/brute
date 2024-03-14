@@ -5,6 +5,7 @@ import sys
 import bcrypt as bcrypt_lib
 import re
 import os
+import time
 
 class Color:
     RED = '\033[91m'
@@ -14,9 +15,6 @@ class Color:
     WHITE = '\033[0m'
 def in_color(color, string):
     return f"{color}{string}{Color.WHITE}"
-
-def sha_2(string):
-    return hashlib.sha2(string.encode()).hexdigest()
 
 def sha_512(string):
     return hashlib.sha512(string.encode()).hexdigest()
@@ -33,6 +31,8 @@ def sha_256(string):
 def md5(string):
     return hashlib.md5(string.encode()).hexdigest()
 
+def md4(string):
+    return hashlib.new('md4', string.encode()).hexdigest()
 
 def get_wordlists():
     wordlists_to_return = []
@@ -45,51 +45,65 @@ def get_wordlists():
             wordlists_to_return.append(wordlist)
     return wordlists_to_return
 
+def crack_hash(hash_to_crack):
+    regex_to_function = {
+        r"^\$2[ayb]\$.{56}$": bcrypt,
+        r"^[A-Fa-f0-9]{32}$": md5,
+        r"^[A-Fa-f0-9]{40}$": sha_1,
+        r"^[A-Fa-f0-9]{64}$": sha_256,
+        r"^[A-Fa-f0-9]{128}$": sha_512,
+        r"^[A-Fa-f0-9]{32}:[A-Fa-f0-9]{32}$": md4
+    }
 
-if len(sys.argv) != 2:
-    print(f"Usage: {sys.argv[0]} <hash>")
-    sys.exit(1)
+    detected_hashing_algorithms = []
 
-hash_to_crack = sys.argv[1]
+    detected = False
+    for regex, function in regex_to_function.items():
+        if re.match(regex, hash_to_crack):
+            detected_hashing_algorithms.append(function)
+            detected = True
+            break
 
-regex_to_function = {
-    r"^\$2[ayb]\$.{56}$": bcrypt,
-    r"^[A-Fa-f0-9]{32}$": md5,
-    r"^[A-Fa-f0-9]{40}$": sha_1,
-    r"^[A-Fa-f0-9]{56}$": sha_2,
-    r"^[A-Fa-f0-9]{64}$": sha_256,
-    r"^[A-Fa-f0-9]{128}$": sha_512
-}
+    if not detected:
+        print(f"[–] Hashing algorithm not found for {hash_to_crack}")
+        print("Supported algorithms: ", end="")
+        for regex in regex_to_function.values():
+            print(regex.__name__, end=" ")
+        print()
+        print("[-] Exiting...")
+        sys.exit(1)
+    else:
+        for hashing_function in detected_hashing_algorithms:
+            print(f"\n[+] Detected {hashing_function.__name__.upper()} for {hash_to_crack}...")
+            start = time.time()
+            worldists = get_wordlists()
 
-detected_hashing_algorithms = []
+            for wordlist in worldists:
+                with open(wordlist, "r") as f:
+                    for line in f:
+                        line = line.strip()
+                        if hashing_function(line) == hash_to_crack:
+                            time_taken = round(time.time() - start, 2)
+                            print(f"[+] Found: {in_color(Color.YELLOW, hash_to_crack)}:{in_color(Color.GREEN, line)} in {time_taken}s")
+                            return
 
-detected = False
-for regex, function in regex_to_function.items():
-    if re.match(regex, hash_to_crack):
-        detected_hashing_algorithms.append(function)
-        detected = True
-        break
+    print(f"[–] Wordlist ended, hash not found for {hash_to_crack}")
 
-if not detected:
-    print(f"Hashing algorithm not found for {hash_to_crack}")
-    print("Supported algorithms: ", end="")
-    for regex in regex_to_function.values():
-        print(regex.__name__, end=" ")
-    print()
-    sys.exit(1)
+
+
+import argparsing
+
+args = argparsing.args
+
+if args.hash:
+    hash_to_crack = args.hash
+    crack_hash(hash_to_crack)
 else:
-    print(f"{len(detected_hashing_algorithms)} hashing algorithm(s) detected")
+    hashes = []
+    with open(args.file, "r") as f:
+        hashes = f.readlines()
+        threads = []
+    for hash_to_crack in hashes:
+        crack_hash(hash_to_crack.strip())
 
-    for hashing_function in detected_hashing_algorithms:
-        print(f"Cracking hash: {hash_to_crack} using {hashing_function.__name__}...")
-        worldists = get_wordlists()
-
-        for wordlist in worldists:
-            with open(wordlist, "r") as f:
-                for line in f:
-                    line = line.strip()
-                    if hashing_function(line) == hash_to_crack:
-                        print(f"Found: {in_color(Color.GREEN, line)} in {in_color(Color.YELLOW, wordlist)}")
-                        sys.exit(0)
-
-print("Wordlist ended, hash not found")
+print("[+] Done")
