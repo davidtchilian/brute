@@ -11,6 +11,7 @@ Il va simplement essayer de repérer le type de mot de passe avec une expression
 - SHA256
 - SHA512
 - BCRYPT
+- NTLM
 
 
 ## Installation
