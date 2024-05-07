@@ -8,6 +8,7 @@ import os
 import time
 import binascii
 import threading
+from Crypto.Hash import MD4
 
 class Color:
     RED = '\033[91m'
@@ -34,8 +35,10 @@ def md5(string):
     return hashlib.md5(string.encode()).hexdigest()
 
 def ntlm(string):
-    ntlm = hashlib.new('md4', string.encode('utf-16le')).digest()
-    return binascii.hexlify(ntlm).decode()
+    md4 = MD4.new()
+    md4.update(string.encode('utf-16le'))
+    ntlm = md4.digest()
+    return ntlm.hex()
 
 def get_wordlists():
     wordlists_to_return = []
@@ -105,9 +108,8 @@ def crack_hash_detect(hash_to_crack):
             hashes_and_functions_to_launch[hash_to_crack].append(hashing_function)
     crack_hash_launcher(hashes_and_functions_to_launch)
 
-            
-
 import argparsing
+
 
 args = argparsing.args
 threads = []
